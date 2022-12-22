@@ -192,7 +192,7 @@ else:
 
 * Таблица(Данные представлены в секундах)
 
-![image1](https://github.com/ThisisFinee/Algo1_lab/blob/643d6d3e70b80330760eb312f585129d788da906/%D0%9F%D0%BE%D0%B8%D1%81%D0%BA%20%D0%B2%D0%B0%D1%801.png)
+![image1](https://github.com/ThisisFinee/Algo1_lab/blob/8318b3a7f6e895fff568a6101cce6fc1a7e2886e/%D0%9F%D0%BE%D0%B8%D1%81%D0%BA%20%D0%B2%D0%B0%D1%801.png)
 
 * График
 
