@@ -1,9 +1,11 @@
 if __name__ == '__main__':
     from exp_search import exp_search
-    from exp_search import bis_search
     from ladder_search import ladder_search
     from bisec_search import bisec_search
     import time
+    import os
+    path = 'C:/Users/totoh/PycharmProjects/Algo1_lab'
+    os.chdir(path)
     for j in range(1,14):
         strin_len = 2**13
         col_len = 2**j
