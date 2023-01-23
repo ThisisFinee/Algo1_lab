@@ -1,4 +1,4 @@
-def bisec_search(meta, item):  # default binary search
+def bisec_search(meta, item, m):  # default binary search
     low, high = 0, len(meta)
     while low < high:
         mid = (low+high) // 2
@@ -8,10 +8,10 @@ def bisec_search(meta, item):  # default binary search
         elif item < mid_val:
             high = mid-1
         else:
-            return [meta[low]]
+            return [meta[mid], m, mid]
     if low == len(meta):
         low -= 1
     if meta[low] == item:
-        return [meta[low]]
+        return [meta[low], m, low]
     else:
         return [-1]

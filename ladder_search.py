@@ -1,5 +1,4 @@
 def ladder_search(a, m, n, el):  # default ladder search
-    no_res = False
     n1 = 0
     m1 = m - 1
     elem = [-1, -1, -1]

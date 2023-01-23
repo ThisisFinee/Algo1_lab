@@ -1,40 +1,33 @@
-def bis_search(lst, item):
-    low, high = 0, len(lst)
-    while low < high:
-        mid = (low + high) // 2
-        mid_val = lst[mid]
-        if item > mid_val:
-            low = mid + 1
-        else:
-            high = mid - 1
-    if low == len(lst):
-        low -= 1
-    if lst[low] == item:
-        return [lst[low]]
+def bis_search(lst, start, stop, item):
+    mid = (start + stop) // 2
+    if start > stop:
+        return [-1, start]
+    if item == lst[mid-1]:
+        return [1, mid]
+    elif item < lst[mid-1]:
+        return bis_search(lst, start, mid - 1, item)
     else:
+        return bis_search(lst, mid + 1, stop, item)
+
+
+def exp_s(arr, start, end, num, exp=1):
+    s_end = max(end-2**exp, start)
+    if arr[s_end] == num:
+        return [1, s_end]
+    elif arr[s_end] < num or s_end == start:
+        return bis_search(arr, s_end, end, num)
+    else:
+        return exp_s(arr, start, s_end, num, exp+1)
+
+
+def exp_search(matrix, col_len, string_len, num):
+    rez = exp_s(matrix[0], 0, string_len, num)
+    if rez[0] == 1:
+        return [0, rez[1]]
+    for i in range(1, col_len):
+        rez = exp_s(matrix[i], 0, rez[1]-1, num)
+        if rez[0] == 1 or (rez[1] == 0 and matrix[i][0] > num):
+            return [i, rez[1]]
+    if rez[0] == -1:
         return [-1]
-def exp_search(mas, item):
-    if mas[0][0] == item:
-        return [mas[0][0]]
-    ind = 1
-    while ind < len(mas[0])*len(mas)-1:
-        if mas[ind//(len(mas[0]))][ind%(len(mas[0]))] > item:
-            break
-        else:
-            ind *= 2
-    if len(mas[0])*len(mas)-1 < ind:
-        ind = len(mas[0])*len(mas)-1
-    ind1 = ind//2
-    for i in range(ind1//len(mas[0]), ind//len(mas[0])+1):
-        if i == ind1//len(mas[0]) and ind1%len(mas[0]) != len(mas[0])-1:
-            bs_res = bis_search(mas[i][ind1%len(mas[0]):len(mas[0])-1], item)
-        elif i == ind//len(mas[0]) and ind%len(mas[0]) != 0:
-            bs_res = bis_search(mas[i][0:ind%len(mas[0])], item)
-        else:
-            bs_res = bis_search(mas[i], item)
-        if bs_res[0] != -1:
-            break
-    return bs_res
-
-
 
