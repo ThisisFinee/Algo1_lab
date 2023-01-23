@@ -16,7 +16,7 @@
           else:
               mat[i][k] = int((strin_len/col_len*i+k)*2)
 ```
-### Для запуска программы с первым формированием таблицы нужно запустить файл [main.py](https://github.com/ThisisFinee/Algo1_lab/blob/643d6d3e70b80330760eb312f585129d788da906/main.py)
+### Для запуска программы с первым формированием таблицы нужно запустить файл [main.py](https://github.com/ThisisFinee/Algo1_lab/blob/ee4f9a06513449706482b94252e68fda4c6391b3/main.py)
 ## Второй вариант формирования таблицы
 * ***A[i][j] == (N/M * i * j) * 2***
 
@@ -29,7 +29,7 @@
           else:
               mat[i][k] = int((strin_len/col_len*i*k)*2)
 ```
-### Для запуска программы со вторым формированием таблицы нужно запустить файл [main2.py](https://github.com/ThisisFinee/Algo1_lab/blob/643d6d3e70b80330760eb312f585129d788da906/main2.py)
+### Для запуска программы со вторым формированием таблицы нужно запустить файл [main2.py](https://github.com/ThisisFinee/Algo1_lab/blob/ee4f9a06513449706482b94252e68fda4c6391b3/main2.py)
 ---
 # Код реализации алгоритмов
 ---
@@ -37,7 +37,6 @@
 
 ```python
 def ladder_search(a, m, n, el):  # default ladder search
-    no_res = False
     n1 = 0
     m1 = m - 1
     elem = [-1, -1, -1]
@@ -50,17 +49,17 @@ def ladder_search(a, m, n, el):  # default ladder search
             elem = [el, n1, m1]
         else:
             break
-    return 
+    return elem
 ```
 ### Сложность: O(M+N)
-### Алгоритм находится в файле [ladder_search.py](https://github.com/ThisisFinee/Algo1_lab/blob/643d6d3e70b80330760eb312f585129d788da906/ladder_search.py)
+### Алгоритм находится в файле [ladder_search.py](https://github.com/ThisisFinee/Algo1_lab/blob/ee4f9a06513449706482b94252e68fda4c6391b3/ladder_search.py)
 ### Идея реализации: 
   #### Начальная позиция - правый верхний угол, если элемент поиска больше выбранного, то делаем шаг вниз по матрице, если элемент поиска меньше, то делаем шаг влево по матрице. Действуем таким образом либо пока не пройдём по всем строкам или столбцам, либо пока не найдём элемент.
 ---
 ## Двоичный поиск
 
 ```python
-def bisec_search(meta, item):  # default binary search
+def bisec_search(meta, item, m):  # default binary search
     low, high = 0, len(meta)
     while low < high:
         mid = (low+high) // 2
@@ -70,66 +69,59 @@ def bisec_search(meta, item):  # default binary search
         elif item < mid_val:
             high = mid-1
         else:
-            return [meta[low]]
+            return [meta[mid], m, mid]
     if low == len(meta):
         low -= 1
     if meta[low] == item:
-        return [meta[low]]
+        return [meta[low], m, low]
     else:
         return [-1]
 ```
 ### Сложность: O(M*log(N))
-### Алгоритм находится в файле [bisec_search.py](https://github.com/ThisisFinee/Algo1_lab/blob/643d6d3e70b80330760eb312f585129d788da906/bisec_search.py)
+### Алгоритм находится в файле [bisec_search.py](https://github.com/ThisisFinee/Algo1_lab/blob/ee4f9a06513449706482b94252e68fda4c6391b3/bisec_search.py)
 ### Идея реализации:
   #### Прогоняем построчно матрицу следующим алгоритмом: создаём три позиции low = начало массива, high = его конец, mid = (low+high)/2. Если элемент поиска больше элемента с индексом mid, то low=mid+1 и пересчитываем mid, если меньше high = mid-1 и пересчитываем mid, и так до тех пор пока low<high. Если элемент с индексом low равен элементу поиска, то возвращаем его в ином случае возвращаем, что элемент не был найден.
 ---
 ## Экспоненциальный поиск
 ```python
-def exp_search(mas, item):
-    if mas[0][0] == item:
-        return [mas[0][0]]
-    ind = 1
-    while ind < len(mas[0])*len(mas)-1:
-        if mas[ind//(len(mas[0]))][ind%(len(mas[0]))] > item:
-            break
-        else:
-            ind *= 2
-    if len(mas[0])*len(mas)-1 < ind:
-        ind = len(mas[0])*len(mas)-1
-    ind1 = ind//2
-    for i in range(ind1//len(mas[0]), ind//len(mas[0])+1):
-        if i == ind1//len(mas[0]) and ind1%len(mas[0]) != len(mas[0])-1:
-            bs_res = bis_search(mas[i][ind1%len(mas[0]):len(mas[0])-1], item)
-        elif i == ind//len(mas[0]) and ind%len(mas[0]) != 0:
-            bs_res = bis_search(mas[i][0:ind%len(mas[0])], item)
-        else:
-            bs_res = bis_search(mas[i], item)
-        if bs_res[0] != -1:
-            break
-    return bs_res
+def exp_s(arr, start, end, num, exp=1):
+    s_end = max(end-2**exp, start)
+    if arr[s_end] == num:
+        return [1, s_end]
+    elif arr[s_end] < num or s_end == start:
+        return bis_search(arr, s_end, end, num)
+    else:
+        return exp_s(arr, start, s_end, num, exp+1)
+
+
+def exp_search(matrix, col_len, string_len, num):
+    rez = exp_s(matrix[0], 0, string_len, num)
+    if rez[0] == 1:
+        return [0, rez[1]]
+    for i in range(1, col_len):
+        rez = exp_s(matrix[i], 0, rez[1]-1, num)
+        if rez[0] == 1 or (rez[1] == 0 and matrix[i][0] > num):
+            return [i, rez[1]]
+    if rez[0] == -1:
+        return [-1]
 ```
 ### Сложность: O(M*log(N))
 > #### Бинарый поиск(для экспоненциального)
 > ```python
-> def bis_search(lst, item):
->    low, high = 0, len(lst)
->    while low < high:
->        mid = (low + high) // 2
->        mid_val = lst[mid]
->        if item > mid_val:
->            low = mid + 1
->        else:
->            high = mid - 1
->    if low == len(lst):
->        low -= 1
->    if lst[low] == item:
->        return [lst[low]]
+> def bis_search(lst, start, stop, item):
+>    mid = (start + stop) // 2
+>    if start > stop:
+>        return [-1, start]
+>    if item == lst[mid-1]:
+>        return [1, mid]
+>    elif item < lst[mid-1]:
+>        return bis_search(lst, start, mid - 1, item)
 >    else:
->        return [-1]
+>        return bis_search(lst, mid + 1, stop, item)
 > ```
-### Оба алгоритма находятся в файле [exp_search.py](https://github.com/ThisisFinee/Algo1_lab/blob/643d6d3e70b80330760eb312f585129d788da906/exp_search.py)
+### Оба алгоритма находятся в файле [exp_search.py](https://github.com/ThisisFinee/Algo1_lab/blob/ee4f9a06513449706482b94252e68fda4c6391b3/exp_search.py)
 ### Идея реализации: 
-  #### Проверяем нулевой элемент массива(так как для удобства идём с первого), если он не равен элементу поиска, то запускаем алгоритм, создаём позицию ind = 1, и при каждой итерации цикла умножаем эту позицию на 2(ind *= 2), цикл работает до тех пор пока элемент с индексом ind меньше элемента поиска или пока ind < len(array)(в этом случае проверяем последний элемент массива, если он меньше, то выводим что элемента поиска нет, если он больше то запускаем двоичный поиск на срез массива от ind//2 до len(array)), если же элемент поиска меньше выбранного элемента, то запускаем двоичный поиск от ind//2 до ind, преждевременно переведя все числа в из однмерных значений в двумерные(ind,ind//2 -> [ind//n],[ind%n] and [(ind//2)//n],[(ind//2)%n]
+  #### Начинаем с правого верхнего угла и идём лесенкой(идём вниз если значение поиска больше, идём влево если значение поиска меньше(изменяем только шаги по строке)), увеличивая шаг в 2 раза каждый раз до тех пор пока выбранное значение не будет меньше значения поиска, как только данное условие выполняется прогоняем бинарный поиск по оставшемуся отрезку.
 ---
 # Код замера и вывода времени работы алгоритмов
 ---
@@ -144,7 +136,7 @@ lad_res.append((end_time1 - start_time1))
 if lad_res[0] == -1:
     print(f"{j}.В результате поиска лесенкой элемент не был найден, время: {lad_res[3]}")
 else:
-    print(f"{j}.Поиск лесенкой.Элемент:{lad_res[0]}, строка:{lad_res[1]}, столбец:{lad_res[2]}, время:{lad_res[3]}")
+    print(f"{j}.Поиск лесенкой.Элемент:{lad_res[0]}, строка:{lad_res[1]+1}, столбец:{lad_res[2]}, время:{lad_res[3]}")
 ```
 
 ### Разъеснение: Каждый алгоритм приходилось запускать 1000 раз, так как в ином случае измерить время было бы просто невозможно(оно всегда равнялось 0)
@@ -155,7 +147,7 @@ else:
 start_time2 = time.process_time()
 for k in range(1000):
     for m in range(len(mat)):
-        bis_res = bisec_search(mat[m], target)
+        bis_res = bisec_search(mat[m], target, m)
         if bis_res[0] != -1:
             break
 end_time2 = time.process_time()
@@ -163,7 +155,7 @@ bis_res.append(end_time2 - start_time2)
 if bis_res[0] == -1:
     print(f"{j}.В результате двоичного поиска элемент не был найден, время: {bis_res[1]}")
 else:
-    print(f"{j}.Двоичный поиск.Элемент:{bis_res[0]} был найден, время:{bis_res[1]}")
+    print(f"{j}.Двоичный поиск.Элемент:{bis_res[0]}, cтрока:{bis_res[1]+1}, cтолбец:{bis_res[2]}, время:{bis_res[3]}")
 ```
 ---
 ## Экспоненциальный поиск
@@ -171,14 +163,15 @@ else:
 ```python
 start_time3 = time.process_time()
 for i in range(1000):
-    exp_res = exp_search(mat, target)
+    exp_res = exp_search(mat, col_len, strin_len, target)
 end_time3 = time.process_time()
+if exp_res[0] != -1:
+    exp_res.insert(0, mat[exp_res[0]][exp_res[1]-1])
 exp_res.append(end_time3 - start_time3)
 if exp_res[0] == -1:
     print(f"{j}.В результате экспоненциального поиска элемент не был найден, время: {exp_res[1]}")
 else:
-    print(f"{j}.Экспоненциальный поиск.Элемент:{exp_res[0]}, был найден, время:{exp_res[1]}")
-
+    print(f"{j}.Экспоненциальный поиск.Элемент:{exp_res[0]}, строка:{exp_res[1]+1}, столбец:{exp_res[2]-1}, время:{exp_res[3]}")
 ```
 
 ### Разъеснение второй цикл в двоичном поиске прогоняет строки матрицы через алгоритм
