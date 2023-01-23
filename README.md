@@ -36,23 +36,21 @@
 ## Поиск лесенкой
 
 ```python
-def ladder_search(a, m, n, el):
+def ladder_search(a, m, n, el):  # default ladder search
     no_res = False
     n1 = 0
     m1 = m - 1
     elem = [-1, -1, -1]
-    while elem != el or no_res != True:
+    while elem[0] != el:
         if a[n1][m1] < el and n1 < n - 1:
             n1 += 1
         elif a[n1][m1] > el and m1 > 0:
             m1 -= 1
         elif a[n1][m1] == el:
             elem = [el, n1, m1]
-            break
         else:
-            no_res = True
             break
-    return elem
+    return 
 ```
 ### Сложность: O(M+N)
 ### Алгоритм находится в файле [ladder_search.py](https://github.com/ThisisFinee/Algo1_lab/blob/643d6d3e70b80330760eb312f585129d788da906/ladder_search.py)
